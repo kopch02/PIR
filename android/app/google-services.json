@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "934696870706",
+    "project_id": "kavernotepad",
+    "storage_bucket": "kavernotepad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:934696870706:android:ce6fd3f712ee9e31bd6d2b",
+        "android_client_info": {
+          "package_name": "com.pir"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCC0gah1QclGmeh98bHbFQvwQWsfLwFo9o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

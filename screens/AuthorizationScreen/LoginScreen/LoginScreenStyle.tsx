@@ -13,6 +13,6 @@ export const styles = StyleSheet.create({
     borderRadius:10,
     padding:10,
     margin:5,
-    width:150
+    width:200
   }
 });

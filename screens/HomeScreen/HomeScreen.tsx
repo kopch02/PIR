@@ -48,15 +48,17 @@ const HomeScreen: React.FC<Props> = observer(({navigation}) => {
     fetchNotes().then(() => setRefreshing(false));
   },[])
 
-   const addNotes = async (status:string, text:string) => {
+   const addNotes = async (status?:string, text?:string) => {
     const ref = firestore().collection("notes").doc(`${auth().currentUser?.email}`).collection('note');
-    await ref.add({status:status, text:text})
+    const item = await ref.add({status:status, text:text})
+    onRefresh()
+    navigation.navigate('note', {data: {status,text}, noteId:item.id})
    }
 
 
   return (
     <View>
-      <Button title="+" onPress={() => addNotes("qwe","asdasdasd")}></Button>
+      <Button title="+" onPress={() => addNotes("new", "")}></Button>
       <FlatList
         data={notes}
         renderItem={renderItem}

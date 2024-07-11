@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, TextInput, Button} from 'react-native';
 import {styles} from './NoteScreenStyle';
 import {NavigationProp} from '@react-navigation/native';
@@ -23,9 +23,18 @@ type NoteScreenProps = {
 const NoteScreen: React.FC<NoteScreenProps> = ({route, navigation}) => {
   if (route) {
     const deleteNote = async () => {
-    await firestore().collection('notes').doc(`${auth().currentUser?.email}`).collection('note').doc(route.params?.noteId).delete();
+      await firestore()
+        .collection('notes')
+        .doc(`${auth().currentUser?.email}`)
+        .collection('note')
+        .doc(route.params?.noteId)
+        .delete();
       navigation.navigate('home');
     };
+
+    const {status, text} = route.params?.data || {};
+    const [statusInput, setStatus] = useState(status);
+    const [textInput, setText] = useState(text);
 
     useEffect(() => {
       navigation.setOptions({
@@ -33,13 +42,31 @@ const NoteScreen: React.FC<NoteScreenProps> = ({route, navigation}) => {
       });
     }, [navigation]);
 
-    const {status, text} = route.params?.data || {};
+    const changeNote = async (status:string|undefined, text:string|undefined) => {
+        await firestore()
+        .collection('notes')
+        .doc(`${auth().currentUser?.email}`)
+        .collection('note')
+        .doc(route.params?.noteId).set({status:status, text:text})
+    }
+
+    const handleStatusChange = (newStatus:string) => {
+        setStatus(newStatus);
+        changeNote(statusInput, textInput);
+      };
+    
+      const handleTextChange = (newText:string) => {
+        setText(newText);
+        changeNote(statusInput, textInput);
+      };
+
+
     return (
       <View style={styles.noteScreen}>
-        <TextInput multiline style={styles.status}>
+        <TextInput multiline style={styles.status} onChangeText={handleStatusChange}>
           {status}
         </TextInput>
-        <TextInput multiline>{text}</TextInput>
+        <TextInput multiline onChangeText={handleTextChange}>{text}</TextInput>
       </View>
     );
   }

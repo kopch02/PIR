@@ -12,6 +12,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationProp} from '@react-navigation/native';
 
+
 import {notesStore} from '../../stores/NotesStore';
 
 type Props = {
@@ -20,7 +21,7 @@ type Props = {
 
 const HomeScreen: React.FC<Props> = observer(({navigation}) => {
   const [notes, setNotes] =
-    useState<{status: string; text: string; time: string}[]>();
+    useState<{_data:{status: string;text: string;}, id:string}[]>();
     const [refreshing, setRefreshing] = useState(false);
 
   const Stack = createNativeStackNavigator();
@@ -34,20 +35,28 @@ const HomeScreen: React.FC<Props> = observer(({navigation}) => {
     fetchNotes();
   }, []);
 
-  const renderItem = ({item,}: {item: {status: string;text: string;time: string;};}) => (
+  const renderItem = ({item,}: {item: {_data:{status: string;text: string;}, id:string};}) => {
+    // console.log(item.id)
+    return (
     <NotesItem
-      item={item}
-      onPress={() => navigation.navigate('note', {data: item})}></NotesItem>
-  );
+      item={item._data}
+      onPress={() => navigation.navigate('note', {data: item._data, noteId:item.id})}></NotesItem>
+  )};
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     fetchNotes().then(() => setRefreshing(false));
   },[])
 
+   const addNotes = async (status:string, text:string) => {
+    const ref = firestore().collection("notes").doc(`${auth().currentUser?.email}`).collection('note');
+    await ref.add({status:status, text:text})
+   }
+
+
   return (
     <View>
-      <Button title="+"></Button>
+      <Button title="+" onPress={() => addNotes("qwe","asdasdasd")}></Button>
       <FlatList
         data={notes}
         renderItem={renderItem}

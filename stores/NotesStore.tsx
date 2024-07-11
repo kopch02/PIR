@@ -6,7 +6,7 @@ import {makeAutoObservable, runInAction} from 'mobx';
 import auth from '@react-native-firebase/auth';
 
 class NotesStore {
-    userData:{status: string; text: string, time:string}[] = [];
+    userData:{_data:{status: string;text: string;}, id:string}[] = [];
 
     constructor() {
         makeAutoObservable(this);
@@ -16,10 +16,10 @@ class NotesStore {
         runInAction(() => {
         firestore()
           .collection('notes')
-          .doc(`${auth().currentUser?.email}`)
-          .onSnapshot(documentSnapshot => {
-            // console.log('User data: ', documentSnapshot.data());
-            this.userData = documentSnapshot.data()?.note;
+          .doc(`${auth().currentUser?.email}`).collection('note').get()
+          .then(documentSnapshot => {
+            // console.log('User data: ', documentSnapshot.docs);
+            this.userData = documentSnapshot.docs;
           });
         })
 

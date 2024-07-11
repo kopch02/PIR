@@ -6,7 +6,6 @@ import {observer} from 'mobx-react';
 type NoteType = {
     status: string;
     text: string;
-    time: string;
   };
   
 

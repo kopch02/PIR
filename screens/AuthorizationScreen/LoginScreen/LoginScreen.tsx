@@ -36,12 +36,16 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
       <TextInput
         placeholder="Почта"
         style={styles.input}
-        onChangeText={setEmail}></TextInput>
+        onChangeText={setEmail}
+        autoCapitalize="none"></TextInput>
       <TextInput
         placeholder="Пароль"
         style={styles.input}
-        onChangeText={setPassword}></TextInput>
-      <Button title="Вход" onPress={() => signIn(email, password)}></Button>
+        onChangeText={setPassword}
+        autoCapitalize="none"
+        textContentType='password'
+        secureTextEntry></TextInput>
+      <Button title="Вход" onPress={() => signIn(email.toLowerCase(), password)}></Button>
       <Button title="Регистрация" onPress={() => navigation.navigate("register")}></Button>
     </View>
   );

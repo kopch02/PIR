@@ -5,6 +5,9 @@ import {Button} from 'react-native';
 import {styles} from './RegistrScreenStyle';
 import {NavigationProp} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
+import '@react-native-firebase/database';
+import firestore from '@react-native-firebase/firestore';
+
 
 type Props = {
   navigation: NavigationProp<any>;
@@ -16,6 +19,7 @@ function register(email: string, password: string, rePassword: string) {
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
         Alert.alert('Успешная регистрация');
+        firestore().collection('notes').doc(email).set({})
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
@@ -47,18 +51,25 @@ const RegistrScreen = () => {
       <TextInput
         placeholder="Почта"
         style={styles.input}
-        onChangeText={setEmail}></TextInput>
+        onChangeText={setEmail}
+        autoCapitalize="none"></TextInput>
       <TextInput
         placeholder="Пароль"
         style={styles.input}
-        onChangeText={setPassword}></TextInput>
+        onChangeText={setPassword}
+        autoCapitalize="none"
+        textContentType='password'
+        secureTextEntry></TextInput>
       <TextInput
         placeholder="Повторите Пароль"
         style={styles.input}
-        onChangeText={setRePassword}></TextInput>
+        onChangeText={setRePassword}
+        autoCapitalize="none"
+        textContentType='password'
+        secureTextEntry></TextInput>
       <Button
         title="Регистрация"
-        onPress={() => register(email, password, rePassword)}></Button>
+        onPress={() => register(email.toLowerCase(), password, rePassword)}></Button>
     </View>
   );
 };

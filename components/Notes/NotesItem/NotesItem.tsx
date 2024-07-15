@@ -1,29 +1,55 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {styles} from './NotesItemStyle';
 import {observer} from 'mobx-react';
 import ModalDropdown from 'react-native-modal-dropdown';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
 type NoteType = {
   title: string;
   text: string;
-  status:string;
+  status: string;
 };
 
 type StatusKey = 'В планах' | 'В работе' | 'Выполнено';
 
 const NotesItem = observer(
-  ({item, onPress}: {item: NoteType; onPress: () => void}) => {
+  ({
+    item,
+    nodeId,
+    onPress,
+  }: {
+    item: NoteType;
+    nodeId: string;
+    onPress: () => void;
+  }) => {
     const [status, setStatus] = useState(item.status);
 
-    const statusStyles:Record<StatusKey, { borderColor: string }> = {
-        'В планах': { borderColor: 'lightblue' },
-        'В работе': { borderColor: 'orange' },
-        'Выполнено': { borderColor: 'lightgreen' },
-      };
-console.log(item)
+    const statusStyles: Record<StatusKey, {borderColor: string}> = {
+      'В планах': {borderColor: 'lightblue'},
+      'В работе': {borderColor: 'orange'},
+      Выполнено: {borderColor: 'lightgreen'},
+    };
+
+    const changeNote = async (status: string) => {
+      setStatus(status);
+      await firestore()
+        .collection('notes')
+        .doc(`${auth().currentUser?.email}`)
+        .collection('note')
+        .doc(nodeId)
+        .set({title: item.title, text: item.text, status: status});
+    };
+
+    const handleSelect = (index: string, value: string) => {
+      changeNote(value);
+    };
+
     return (
-      <TouchableOpacity style={[styles.vv, statusStyles[status as StatusKey]]} onPress={onPress}>
+      <TouchableOpacity
+        style={[styles.vv, statusStyles[status as StatusKey]]}
+        onPress={onPress}>
         <View style={styles.top}>
           <Text style={styles.status}>{item.title}</Text>
           <ModalDropdown
@@ -34,7 +60,7 @@ console.log(item)
             isFullWidth={true}
             textStyle={styles.selecterText}
             dropdownTextStyle={styles.selecterText}
-            onSelect={(index, value) => setStatus(value)}
+            onSelect={(index, value) => handleSelect(index, value)}
           />
         </View>
         <Text style={styles.text}>{item.text}</Text>

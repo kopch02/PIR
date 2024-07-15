@@ -64,6 +64,7 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
     return (
       <NotesItem
         item={item._data}
+        nodeId={item.id}
         onPress={() =>
           navigation.navigate('note', {data: item._data, noteId: item.id})
         }></NotesItem>

@@ -1,22 +1,46 @@
-import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { styles } from './NotesItemStyle';
+import React, { useState } from 'react';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {styles} from './NotesItemStyle';
 import {observer} from 'mobx-react';
+import ModalDropdown from 'react-native-modal-dropdown';
 
 type NoteType = {
-    status: string;
-    text: string;
-  };
-  
+  title: string;
+  text: string;
+  status:string;
+};
 
-const NotesItem = observer(({ item, onPress }: { item: NoteType, onPress:() => void }) => {
+type StatusKey = 'В планах' | 'В работе' | 'Выполнено';
+
+const NotesItem = observer(
+  ({item, onPress}: {item: NoteType; onPress: () => void}) => {
+    const [status, setStatus] = useState(item.status);
+
+    const statusStyles:Record<StatusKey, { borderColor: string }> = {
+        'В планах': { borderColor: 'lightblue' },
+        'В работе': { borderColor: 'orange' },
+        'Выполнено': { borderColor: 'lightgreen' },
+      };
+console.log(item)
     return (
-        <TouchableOpacity style={styles.vv} onPress={onPress} >
-            <Text style={styles.status}>{item.status}</Text>
-            <Text style={styles.text}>{item.text}</Text>
-            {/* <Text>{String(item.item.time)}</Text> */}
-        </TouchableOpacity>
+      <TouchableOpacity style={[styles.vv, statusStyles[status as StatusKey]]} onPress={onPress}>
+        <View style={styles.top}>
+          <Text style={styles.status}>{item.title}</Text>
+          <ModalDropdown
+            options={['В планах', 'В работе', 'Выполнено']}
+            defaultValue={item.status}
+            saveScrollPosition={false}
+            defaultIndex={0}
+            isFullWidth={true}
+            textStyle={styles.selecterText}
+            dropdownTextStyle={styles.selecterText}
+            onSelect={(index, value) => setStatus(value)}
+          />
+        </View>
+        <Text style={styles.text}>{item.text}</Text>
+      </TouchableOpacity>
     );
-});
+  },
+);
 
 export default NotesItem;

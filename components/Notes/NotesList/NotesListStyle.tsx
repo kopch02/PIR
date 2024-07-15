@@ -4,15 +4,8 @@ export const styles = StyleSheet.create({
   HomeScreen: {
     display:"flex",
     height:"100%",
+    // width:"100%",
+    // backgroundColor:"grey",
     padding:15,
-  },
-  addBtn: {
-    width:50,
-    alignItems:"center",
-    alignSelf:"center"
-  },
-  addBtnText: {
-    fontSize:28,
-    // cursor:"pointer"
   }
 });

@@ -7,8 +7,9 @@ import auth from '@react-native-firebase/auth';
 
 interface RouteParams {
   data: {
-    status: string;
+    title: string;
     text: string;
+    status:string;
   };
   noteId: string;
 }
@@ -32,8 +33,8 @@ const NoteScreen: React.FC<NoteScreenProps> = ({route, navigation}) => {
       navigation.navigate('home');
     };
 
-    const {status, text} = route.params?.data || {};
-    const [statusInput, setStatus] = useState(status);
+    const {title, text, status} = route.params?.data || {};
+    const [titleInput, setTitle] = useState(title);
     const [textInput, setText] = useState(text);
 
     useEffect(() => {
@@ -42,29 +43,29 @@ const NoteScreen: React.FC<NoteScreenProps> = ({route, navigation}) => {
       });
     }, [navigation]);
 
-    const changeNote = async (status:string|undefined, text:string|undefined) => {
+    const changeNote = async (title:string|undefined, text:string|undefined) => {
         await firestore()
         .collection('notes')
         .doc(`${auth().currentUser?.email}`)
         .collection('note')
-        .doc(route.params?.noteId).set({status:status, text:text})
+        .doc(route.params?.noteId).set({title:title, text:text, status:status})
     }
 
     const handleStatusChange = (newStatus:string) => {
-        setStatus(newStatus);
-        changeNote(statusInput, textInput);
+        setTitle(newStatus);
+        changeNote(titleInput, textInput);
       };
     
       const handleTextChange = (newText:string) => {
         setText(newText);
-        changeNote(statusInput, textInput);
+        changeNote(titleInput, textInput);
       };
 
 
     return (
       <View style={styles.noteScreen}>
         <TextInput multiline style={styles.status} onChangeText={handleStatusChange}>
-          {status}
+          {title}
         </TextInput>
         <TextInput multiline onChangeText={handleTextChange}>{text}</TextInput>
       </View>

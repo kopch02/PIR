@@ -6,8 +6,9 @@ import RegistrScreen from './screens/AuthorizationScreen/RegistrScreen/RegistrSc
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import auth from '@react-native-firebase/auth';
 import User from '@react-native-firebase/auth';
-import {Button} from 'react-native';
+import {Button, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import NoteScreen from './screens/NoteScreen/NoteScreen';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -55,7 +56,9 @@ function App(): React.JSX.Element {
           options={{
             title: 'Главная',
             headerRight: props => (
-              <Button title="Выход" onPress={() => auth().signOut()} />
+                <TouchableOpacity style={styles.quitBtn} onPress={() => auth().signOut()}>
+                    <Text style={styles.quitBtnText}>Выход</Text>
+                </TouchableOpacity>
             ),
           }}
         />
@@ -64,9 +67,6 @@ function App(): React.JSX.Element {
           component={NoteScreen}
           options={{
             title: 'Заметка',
-            headerRight: props => (
-              <Button title="Удалить" />
-            ),
           }}
         />
       </Stack.Navigator>
@@ -74,4 +74,19 @@ function App(): React.JSX.Element {
   );
 }
 
+
+const styles = StyleSheet.create({
+    quitBtn: {
+
+    },
+    quitBtnText: {
+        fontSize:16,
+        color:"black"
+    }
+})
+
 export default App;
+
+
+
+

@@ -13,6 +13,7 @@ export const styles = StyleSheet.create({
   },
   addBtnText: {
     fontSize:28,
+    color:"black"
     // cursor:"pointer"
   }
 });

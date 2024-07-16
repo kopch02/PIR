@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text, TextInput, Button} from 'react-native';
+import { View, TextInput, Button, TouchableOpacity, Text} from 'react-native';
 import {styles} from './NoteScreenStyle';
 import {NavigationProp} from '@react-navigation/native';
-import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
+import { notesStore } from '../../stores/NotesStore';
 
 interface RouteParams {
   data: {
@@ -22,49 +21,33 @@ type NoteScreenProps = {
 };
 
 const NoteScreen: React.FC<NoteScreenProps> = ({route, navigation}) => {
-  if (route) {
-    const deleteNote = async () => {
-      await firestore()
-        .collection('notes')
-        .doc(`${auth().currentUser?.email}`)
-        .collection('note')
-        .doc(route.params?.noteId)
-        .delete();
-      navigation.navigate('home');
-    };
 
+  if (route) {
     const {title, text, status} = route.params?.data || {};
     const [titleInput, setTitle] = useState(title);
     const [textInput, setText] = useState(text);
 
     useEffect(() => {
       navigation.setOptions({
-        headerRight: () => <Button title="Удалить" onPress={deleteNote} />,
+        headerRight: () => <TouchableOpacity style={styles.deleteBtn} onPress={() => notesStore.deleteNote(navigation, route.params?.noteId)}>
+                <Text style={styles.deleteBtnText}>Удалить</Text>
+            </TouchableOpacity>,
       });
     }, [navigation]);
 
-    const changeNote = async (title:string|undefined, text:string|undefined) => {
-        await firestore()
-        .collection('notes')
-        .doc(`${auth().currentUser?.email}`)
-        .collection('note')
-        .doc(route.params?.noteId).set({title:title, text:text, status:status})
-    }
-
-    const handleStatusChange = (newStatus:string) => {
+    const handleTitleChange = (newStatus:string) => {
         setTitle(newStatus);
-        changeNote(titleInput, textInput);
+        notesStore.editNote(titleInput ?? "", textInput ?? "", status ?? "В работе", route.params?.noteId ?? "");
       };
     
       const handleTextChange = (newText:string) => {
         setText(newText);
-        changeNote(titleInput, textInput);
+        notesStore.editNote(titleInput ?? "", textInput ?? "", status ?? "В работе", route.params?.noteId ?? "");
       };
-
 
     return (
       <View style={styles.noteScreen}>
-        <TextInput multiline style={styles.status} onChangeText={handleStatusChange}>
+        <TextInput multiline style={styles.status} onChangeText={handleTitleChange}>
           {title}
         </TextInput>
         <TextInput multiline onChangeText={handleTextChange}>{text}</TextInput>

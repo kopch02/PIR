@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import { View, Text, TouchableOpacity} from 'react-native';
 import {styles} from './NotesItemStyle';
 import {observer} from 'mobx-react';
 import ModalDropdown from 'react-native-modal-dropdown';
-import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
+import { notesStore } from '../../../stores/NotesStore';
 
 type NoteType = {
   title: string;
@@ -29,21 +28,12 @@ const NotesItem = observer(
     const statusStyles: Record<StatusKey, {borderColor: string}> = {
       'В планах': {borderColor: 'lightblue'},
       'В работе': {borderColor: 'orange'},
-      Выполнено: {borderColor: 'lightgreen'},
-    };
-
-    const changeNote = async (status: string) => {
-      setStatus(status);
-      await firestore()
-        .collection('notes')
-        .doc(`${auth().currentUser?.email}`)
-        .collection('note')
-        .doc(nodeId)
-        .set({title: item.title, text: item.text, status: status});
+      'Выполнено': {borderColor: 'lightgreen'},
     };
 
     const handleSelect = (index: string, value: string) => {
-      changeNote(value);
+        setStatus(value)
+        notesStore.editNote(item.title, item.text, value, nodeId);
     };
 
     return (

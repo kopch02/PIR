@@ -18,12 +18,15 @@ export const styles = StyleSheet.create({
   status: {
     textAlign:"left",
     fontSize:22,
-    paddingBottom: 10
+    paddingBottom: 10,
+    color:"black"
   },
   text: {
-    maxHeight:100
+    maxHeight:100,
+    color:"black"
   },
   selecterText:{
-    fontSize:14
+    fontSize:14,
+    color:"black"
   },
 });

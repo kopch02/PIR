@@ -10,4 +10,11 @@ export const styles = StyleSheet.create({
     borderBottomWidth:1,
     paddingBottom:5
   },
+  deleteBtn:{
+
+  },
+  deleteBtnText:{
+    color:"black",
+    fontSize:16
+  }
 });

@@ -29,7 +29,6 @@ const NotesList: React.FC<Props> = observer(({
             onPress={() =>
               navigation.navigate('note', {data: item._data, noteId: item.id})
             }/>)};
-    console.log("лист перерисовался")
   return (
     <FlatList
       data={notesStore.userData}

@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     borderRadius:15,
     padding:10,
     width:"100%",
-    maxHeight:150,
+    maxHeight:160,
     marginBottom:7
   },
   top: {

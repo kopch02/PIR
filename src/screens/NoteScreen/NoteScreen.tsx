@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import { View, TextInput, Button, TouchableOpacity, Text} from 'react-native';
+import { View, TextInput, TouchableOpacity, Text} from 'react-native';
 import {styles} from './NoteScreenStyle';
 import {NavigationProp} from '@react-navigation/native';
 import { notesStore } from '../../stores/NotesStore';
 
-interface RouteParams {
+interface IRouteParams {
   data: {
     title: string;
     text: string;
@@ -15,7 +15,7 @@ interface RouteParams {
 
 type NoteScreenProps = {
   route?: {
-    params?: RouteParams;
+    params?: IRouteParams;
   };
   navigation: NavigationProp<any>;
 };

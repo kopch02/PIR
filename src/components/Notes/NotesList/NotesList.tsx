@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {StyleSheet, View, FlatList, RefreshControl} from 'react-native';
+import React from 'react';
+import { FlatList, RefreshControl} from 'react-native';
 import {styles} from './NotesListStyle';
 import {NavigationProp} from '@react-navigation/native';
 import {observer} from 'mobx-react-lite';
@@ -7,7 +7,7 @@ import NotesItem from '../NotesItem/NotesItem';
 import { notesStore } from '../../../stores/NotesStore';
 
 type Props = {
-  notes: {_data: {title: string; text: string, status:string}; id: string}[] | undefined;
+  notes: {data: {title: string; text: string, status:string}; id: string}[] | undefined;
   onRefresh: () => void;
   refreshing: boolean;
   navigation:NavigationProp<any>;
@@ -20,14 +20,14 @@ const NotesList: React.FC<Props> = observer(({
   navigation
 }) => {
     const renderItem = ({item,}: {
-        item: {_data: {title: string; text: string, status:string}; id: string};
+        item: {data: {title: string; text: string, status:string}; id: string};
       }) => {
         return (
           <NotesItem
-            item={item._data}
+            item={item.data}
             nodeId={item.id}
             onPress={() =>
-              navigation.navigate('note', {data: item._data, noteId: item.id})
+              navigation.navigate('note', {data: item.data, noteId: item.id})
             }/>)};
   return (
     <FlatList

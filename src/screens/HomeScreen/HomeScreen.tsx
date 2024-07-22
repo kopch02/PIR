@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect } from 'react';
 import { View, TouchableOpacity} from 'react-native';
 import {Text} from 'react-native';
 import {styles} from './HomeScreenStyle';
 import '@react-native-firebase/database';
-import NotesItem from '../../components/Notes/NotesItem/NotesItem';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationProp} from '@react-navigation/native';
 import NotesList from '../../components/Notes/NotesList/NotesList';

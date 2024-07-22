@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
+import {Alert, View} from 'react-native';
 import {TextInput} from 'react-native';
 import {Button} from 'react-native';
 import {styles} from './RegistrScreenStyle';
@@ -8,12 +8,16 @@ import auth from '@react-native-firebase/auth';
 import '@react-native-firebase/database';
 import firestore from '@react-native-firebase/firestore';
 
-
-type Props = {
-  navigation: NavigationProp<any>;
-};
+type ErrorCodes = 'auth/email-already-in-use' | 'auth/invalid-email' | 'auth/weak-password';
 
 function register(email: string, password: string, rePassword: string) {
+
+    const errorMessages = {
+        'auth/email-already-in-use': 'Эта почта уже используется!',
+        'auth/invalid-email': 'Неправильная почта!',
+        'auth/weak-password': 'Пароль слишком короткий или не надёжный!'
+    };
+
   if (password === rePassword) {
     auth()
       .createUserWithEmailAndPassword(email, password)
@@ -22,19 +26,12 @@ function register(email: string, password: string, rePassword: string) {
         firestore().collection('notes').doc(email).set({})
       })
       .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          Alert.alert('Эта почта уже используется!');
+        const errorMessage = errorMessages[error.code as ErrorCodes];
+        if (errorMessage) {
+          Alert.alert(errorMessage);
+        } else {
+            console.error(error);
         }
-
-        if (error.code === 'auth/invalid-email') {
-          Alert.alert('Неправильная почта!');
-        }
-
-        if (error.code === 'auth/weak-password') {
-          Alert.alert('Пароль слишком короткий или не надёжный!');
-        }
-
-        console.error(error);
       });
   } else {
     Alert.alert('Пароли не совпадают');

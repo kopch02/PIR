@@ -1,29 +1,32 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, Alert} from 'react-native';
+import { View, Alert} from 'react-native';
 import {TextInput} from 'react-native';
 import {Button} from 'react-native';
 import {styles} from './LoginScreenStyle';
 import {NavigationProp} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 
+type ErrorCodes = 'auth/invalid-credential' | 'auth/invalid-email' | 'auth/weak-password';
+
 type Props = {
   navigation: NavigationProp<any>;
 };
 
 function signIn(email: string, password: string) {
+    const errorMessages = {
+        'auth/invalid-credential': 'Почта или пароль неверны!',
+        'auth/invalid-email': 'Неверная почта!',
+        'auth/weak-password': 'Неверный пароль!'
+    };
   auth()
     .signInWithEmailAndPassword(email, password)
     .catch(error => {
-        if (error.code === 'auth/invalid-credential') {
-            Alert.alert('Почта или пароль неверны!');
+        const errorMessage = errorMessages[error.code as ErrorCodes];
+        if (errorMessage) {
+            Alert.alert(errorMessage);
+        } else {
+            console.error(error);
         }
-        if (error.code === 'auth/invalid-email') {
-            Alert.alert('Неверная почта!');
-        }
-        if (error.code === 'auth/wrong-password') {
-            Alert.alert('Неверный пароль!');
-        }
-      console.error(error);
     });
 }
 

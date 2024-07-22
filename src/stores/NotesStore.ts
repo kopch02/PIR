@@ -1,13 +1,11 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
 import '@react-native-firebase/database';
 import firestore from '@react-native-firebase/firestore';
-import {makeAutoObservable, runInAction} from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import auth from '@react-native-firebase/auth';
-import {NavigationProp} from '@react-navigation/native';
+import { NavigationProp } from '@react-navigation/native';
 
 
-interface Data {
+interface IData {
   title: string;
   text: string;
   status: string;
@@ -15,7 +13,7 @@ interface Data {
 
 class NotesStore {
   userData: {
-    _data: {title: string; text: string; status: string};
+    data: IData;
     id: string;
   }[] = [];
   refreshing = false;
@@ -34,7 +32,7 @@ class NotesStore {
             .get()
                 const documentSnapshot = await res;
                 this.userData = documentSnapshot.docs.map(doc => ({
-                    _data: {
+                    data: {
                         title: doc.data()?.title || '',
                         text: doc.data()?.text || '',
                         status: doc.data()?.status || '',
